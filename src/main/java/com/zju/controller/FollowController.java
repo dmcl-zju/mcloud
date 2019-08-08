@@ -51,6 +51,60 @@ public class FollowController {
 	@Resource
 	QuestionService questionServiceImpl;
 	
+	
+/////////////////////////////////////////////////增加医生相关///////////////////////////////////////////////////////////////////////////////////////////////////	
+	//绑定自己的医生(和关注要区分一下）,输入的是要关注的医生id
+	@RequestMapping({"/bindDocter"})
+	@ResponseBody
+	public String bindDocter(@RequestParam("docterid") int docterId) {
+
+		if(hostHolder.get()==null) {
+			return WendaUtil.getJSONString(999);
+		}
+		User user = userServiceImpl.getDocterById(docterId);
+		if(null==user) {
+			return WendaUtil.getJSONString(1,"用户不存在");	
+		}
+		boolean res = followServiceImpl.follow(hostHolder.get().getId(), EntityType.ENTITY_DOCTER_BIND, docterId);
+		
+		
+		//异步发站内信通知有人关注
+//		EventModel eventModel = new EventModel();
+//		eventModel.setActorId(hostHolder.get().getId()).setEntityType(EntityType.ENTITY_USER).
+//			setEntityId(docterId).setEntityOwnerId(docterId).setEventType(EventType.FOLLOW);
+//		eventProducer.fireEvent(eventModel);
+	
+		return WendaUtil.getJSONString(res?0:1, String.valueOf(followServiceImpl.getFolloweeCount(EntityType.ENTITY_DOCTER_BIND, hostHolder.get().getId())));
+	}
+	
+	//取关医生
+	@RequestMapping({"/unBindDocter"})
+	@ResponseBody
+	public String unBindDocter(@RequestParam("docterid") int docterId) {
+		
+		if(hostHolder.get()==null) {
+			return WendaUtil.getJSONString(999);
+		}
+		User user = userServiceImpl.getUserById(docterId);
+		if(null==user) {
+			return WendaUtil.getJSONString(1,"用户不存在");	
+		}
+		
+		boolean res = followServiceImpl.unfollow(hostHolder.get().getId(), EntityType.ENTITY_USER, docterId);
+		//异步发站内信通知有人关注
+//		EventModel eventModel = new EventModel();
+//		eventModel.setActorId(hostHolder.get().getId()).setEntityType(EntityType.ENTITY_USER).
+//			setEntityId(docterId).setEntityOwnerId(docterId).setEventType(EventType.UNFOLLOW);
+//		eventProducer.fireEvent(eventModel);
+	
+		return WendaUtil.getJSONString(res?0:1, String.valueOf(followServiceImpl.getFolloweeCount(EntityType.ENTITY_DOCTER_BIND, hostHolder.get().getId())));
+	}	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	
+	
+	
+	
+	
 	//关注用户,关注成功后返回自己的关注人数
 	@RequestMapping({"/followUser"})
 	@ResponseBody
@@ -98,6 +152,8 @@ public class FollowController {
 	
 		return WendaUtil.getJSONString(res?0:1, String.valueOf(followServiceImpl.getFolloweeCount(EntityType.ENTITY_USER, hostHolder.get().getId())));
 	}
+	
+	
 	//关注问题
 	@RequestMapping({"/followQuestion"})
 	@ResponseBody
@@ -199,4 +255,9 @@ public class FollowController {
         }
         return userInfos;
     }
+    
+    
+    
+    
+    
 }

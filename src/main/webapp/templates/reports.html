@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	当前用户：$!{user.name}<br><br><br>
+	
+	诊断报告：<br><br>
+	#foreach($vo in $vos)
+		诊断医生：$!{vo.doctername}
+		提交时间：$date.format('yyyy-MM-dd HH:mm:ss',$!{vo.time})
+		报告id(要隐藏的)：$!{vo.reportId};<br>
+    #end
+</body>
+</html>

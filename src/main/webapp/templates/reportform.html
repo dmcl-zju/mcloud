@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	--------------------------------医生界面下的诊断报告--------------------------------<br>
+	
+	当前医生：$!{user.name}<br><br><br>
+	
+
+	孕妇基本信息：<br><br>
+	姓名：$!{vo.info.name}<br>
+	年龄：$!{vo.info.age}<br>
+	身高：$!{vo.info.height}<br>
+	体重：$!{vo.info.weight}<br>
+	孕周：$!{vo.info.weeks}<br><br>
+	
+	系统分析结果：<br><br>
+	胎心率基线：$!{vo.data.fhrBase}<br>
+	胎心变异值：$!{vo.data.fhrStv}<br>
+	宫缩基线：$!{vo.data.ucBase}<br>
+	胎动FHR上升：$!{vo.data.fhrUp}<br>
+	胎动FHR下降：$!{vo.data.fhrDown}<br>
+	最终得分：$!{vo.data.score}<br><br>
+	
+	医生指导建议：<br><br>
+	
+	$!{vo.report.guidance}<br><br>
+	
+	指导医生：$!{vo.doctername} 提交时间：$date.format('yyyy-MM-dd HH:mm:ss',$!{vo.report.createdTime})<br><br>
+	数据id(隐藏，在生成报告的请求中要用)：$!{vo.dataId} 
+</body>
+</html>

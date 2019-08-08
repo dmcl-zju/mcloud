@@ -144,6 +144,9 @@ public class SensitiveServiceImpl implements InitializingBean{
             String lineTxt;
             while ((lineTxt = bufferedReader.readLine()) != null) {
                 lineTxt = lineTxt.trim();
+                
+               //看文件内容
+               // System.out.println(lineTxt);
                 addWord(lineTxt);
             }
             read.close();

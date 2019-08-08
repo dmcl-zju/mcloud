@@ -5,11 +5,28 @@ import java.util.Date;
 public class Message {
 	private int id;
 	private int fromId;
+	private int fromRole;
 	private int toId;
+	private int toRole;
 	private String content;
 	private Date createdDate;
 	private int hasRead;
 	private String conversationId;
+	
+	
+
+	public int getFromRole() {
+		return fromRole;
+	}
+	public void setFromRole(int fromRole) {
+		this.fromRole = fromRole;
+	}
+	public int getToRole() {
+		return toRole;
+	}
+	public void setToRole(int toRole) {
+		this.toRole = toRole;
+	}
 	public int getId() {
 		return id;
 	}
@@ -54,9 +71,12 @@ public class Message {
 	}
 	@Override
 	public String toString() {
-		return "Message [id=" + id + ", fromId=" + fromId + ", toId=" + toId + ", content=" + content + ", createdDate="
-				+ createdDate + ", hasRead=" + hasRead + ", conversationId=" + conversationId + "]";
+		return "Message [id=" + id + ", fromId=" + fromId + ", fromRole=" + fromRole + ", toId=" + toId + ", toRole="
+				+ toRole + ", content=" + content + ", createdDate=" + createdDate + ", hasRead=" + hasRead
+				+ ", conversationId=" + conversationId + "]";
 	}
+	
+	
 	
 	
 }

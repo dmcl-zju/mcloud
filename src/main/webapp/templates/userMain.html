@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	
+	当前用户：$!{user.name}<br><br>
+
+	我的医生:<br><br>
+	#foreach($followee in $followees)
+		姓名:$!{followee.name}<br>
+		绑定人数：$!{followee.count}<br>
+		简介:$!{followee.background}<br><br>
+    #end
+	
+	<br>
+	<hr>
+	<br>
+	心云医生:<br><br>
+	#foreach($vo in $vos)
+		姓名:$!{vo.name}<br>
+		绑定人数：$!{vo.count}<br>
+		简介:$!{vo.background}<br><br>
+    #end
+</body>
+</html>

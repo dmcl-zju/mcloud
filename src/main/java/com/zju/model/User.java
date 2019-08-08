@@ -6,6 +6,18 @@ public class User {
 	private String password;
 	private String salt;
 	private String headUrl;
+	private int role;
+	
+	
+
+	public int getRole() {
+		return role;
+	}
+	public void setRole(int role) {
+		this.role = role;
+	}
+	
+	
 	public int getId() {
 		return id;
 	}
@@ -36,12 +48,10 @@ public class User {
 	public void setHeadUrl(String headUrl) {
 		this.headUrl = headUrl;
 	}
-	
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", password=" + password + ", salt=" + salt + ", headUrl="
-				+ headUrl + "]";
+				+ headUrl + ", role=" + role + "]";
 	}
-	
 	
 }

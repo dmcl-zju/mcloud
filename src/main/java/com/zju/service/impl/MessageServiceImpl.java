@@ -38,21 +38,21 @@ public class MessageServiceImpl implements MessageService{
 	}
 
 	@Override
-	public List<Message> getConversationList(int userId, int offset, int limit) {
+	public List<Message> getConversationList(int userId, int userRole,int offset, int limit) {
 		// TODO Auto-generated method stub
-		return messageMapper.selConversationListByUserid(userId, offset, limit);
+		return messageMapper.selConversationListByUserid(userId, userRole,offset, limit);
 	}
 
 	@Override
-	public int getUnreadCount(int userId, String conversationId) {
+	public int getUnreadCount(int userId,int userRole, String conversationId) {
 		// TODO Auto-generated method stub
-		return messageMapper.selCountOfUnread(userId, conversationId);
+		return messageMapper.selCountOfUnread(userId,userRole, conversationId);
 	}
 
 	@Override
-	public int clearUnreadCount(int userId, String conversationId) {
+	public int clearUnreadCount(int userId, int userRole,String conversationId) {
 		// TODO Auto-generated method stub
-		return messageMapper.updHasread(userId, conversationId);
+		return messageMapper.updHasread(userId, userRole,conversationId);
 	}
 	
 }

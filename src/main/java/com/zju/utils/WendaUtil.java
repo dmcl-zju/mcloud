@@ -1,11 +1,13 @@
 package com.zju.utils;
 
 import java.security.MessageDigest;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zju.model.User;
 
 
 //工具类
@@ -14,6 +16,11 @@ public class WendaUtil {
 	//定义一些常用的常量
 	public static int ENTITY_QUESTION = 1;
 	public static int SYSTEM_USERID = 1;
+	public static int SYSTEM_USERROLE = 1;
+	
+	//系统提醒医生处理报告
+	public static int ACTION_USERID = 2;
+	public static int ACTION_ROLE = 1;
 	
 	
 	
@@ -56,6 +63,15 @@ public class WendaUtil {
 		for(Map.Entry<String, Object> entry:map.entrySet()) {
 			json.put(entry.getKey(), entry.getValue());
 		}
+		return json.toJSONString();
+	}
+	
+	
+	//加入map
+	public static String getJSONString(int code,String listname,List<User> list) {
+		JSONObject json = new JSONObject();
+		json.put("code", code);
+		json.put(listname, list);
 		return json.toJSONString();
 	}
 	

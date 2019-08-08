@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.zju.mapper.DocterMapper;
 import com.zju.mapper.TicketMapper;
 import com.zju.mapper.UserMapper;
 import com.zju.model.HostHolder;
@@ -25,6 +26,10 @@ public class PassportInterceptor implements HandlerInterceptor {
 	
 	@Resource
 	UserMapper userMapper;
+	
+	
+	@Resource
+	DocterMapper docterMapper;
 	
 	@Resource
 	HostHolder hostHolder;
@@ -49,10 +54,18 @@ public class PassportInterceptor implements HandlerInterceptor {
 				//System.out.println("非登陆用户"+loginTicket);
 				return true;
 			}
-			//到这里说明是登陆用户
-			User user = userMapper.selById(loginTicket.getUserId());
-			hostHolder.set(user);
-			//System.out.println(user.getName()+"登陆进来了");
+			//到这里说明是登陆用户，先判断是医生还是孕妇
+			if(loginTicket.getRole()==1) {
+				//孕妇
+				User user = userMapper.selById(loginTicket.getUserId());
+				hostHolder.set(user);
+				//System.out.println("孕妇用户"+user.getName()+"登陆进来了");
+			}else if(loginTicket.getRole()==2) {
+				//医生
+				User user = docterMapper.selById(loginTicket.getUserId());
+				hostHolder.set(user);
+				//System.out.println("医生用户"+user.getName()+"登陆进来了");
+			}
 		}
 		return true;
 	}

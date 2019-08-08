@@ -1,7 +1,7 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+﻿<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.zju</groupId>
-  <artifactId>wenda</artifactId>
+  <artifactId>mcloud</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
   <properties>
@@ -188,11 +188,11 @@
 					<!-- /abc -->
 					<path>/</path>
 					<!-- 以下为项目热部署发布时的内容 -->
-					<username>tomcat</username>
-					<password>tomcat</password>
+					<!-- <username>tomcat</username>
+					<password>tomcat</password> -->
 					<!-- 阿里云的配置 -->
 					<!-- /阿里云上的端口号被改成了80，因此省略端口号 -->
-					<url>http://47.103.128.253/manager/text</url>
+					<!-- <url>http://47.103.128.253/manager/text</url> -->
 					<!-- 本地linux上的配置 -->
 					<!-- /linux上的端口号被改成了80，因此省略端口号 -->
 					<!-- <url>http://192.168.204.128/manager/text</url> -->

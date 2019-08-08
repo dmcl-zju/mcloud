@@ -31,7 +31,7 @@ public class QuestionHandler implements EventHandler{
 			searchServiceImpl.indexQuestion(model.getEntityId(),model.getExts("title"), model.getExts("content"));
 		} catch (Exception e) {
 			// TODO: handle exception
-			logger.error("跟新solr出错"+e.getMessage());
+			logger.error("更新solr出错"+e.getMessage());
 		}
 	}
 

@@ -38,8 +38,13 @@ public class LikeController {
 		//异步处理点赞通知
 		EventModel model = new EventModel();
 		Comment comment = commentServiceImpl.getCommentById(commentId);
+		
+		
+		
 		model.setActorId(hostHolder.get().getId()).setEntityOwnerId(comment.getUserId()).setExts("questionId", String.valueOf(comment.getEntityId())).
 		setEntityType(EntityType.ENTITY_COMMENT).setEntityId(commentId).setEventType(EventType.LIKE);
+		
+		
 		eventProducer.fireEvent(model);	
 		
 		long likecount = likeServiceImpl.like(hostHolder.get().getId(),EntityType.ENTITY_COMMENT, commentId);

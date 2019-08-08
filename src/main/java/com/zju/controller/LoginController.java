@@ -29,12 +29,13 @@ public class LoginController {
 	public String regist(Model model,
 						 @RequestParam("username") String username,
 						 @RequestParam("password") String password,
-						 @RequestParam(value="",required=false) String next,
+						 @RequestParam(value="role",defaultValue="1") int role,
+						 @RequestParam(value="next",required=false) String next,
 						 @RequestParam(value="rememberme",defaultValue="false") boolean rememberme,
 						 HttpServletResponse response) {
 		
 		try {
-			Map<String,String> map = userServiceImpl.regist(username, password);
+			Map<String,String> map = userServiceImpl.regist(username, password,role);
 			//登陆成功，将ticket放到cookie中
 			if(map.containsKey("ticket")) {
 				Cookie cookie = new Cookie("ticket", map.get("ticket"));
@@ -47,8 +48,18 @@ public class LoginController {
 				if(!StringUtils.isBlank(next)) {
 					return "redirect:"+next;
 				}
-				//登陆成功直接重定向到主页
-				return "redirect:/";
+				
+				if(role==1) {
+					//跳转到用户首页
+					return "redirect:/usermain";
+					
+				}else if(role==2){
+					//重定向到医生首页
+					return "docterMain";
+				}else {
+					//登陆成功直接重定向到主页
+					return "redirect:/";
+				}				
 			}else {
 				if(map.containsKey("erro")) {
 					logger.info(map.get("erro"));
@@ -72,12 +83,13 @@ public class LoginController {
 	public String login(Model model,
 						 @RequestParam("username") String username,
 						 @RequestParam("password") String password,
-						 @RequestParam(value="",required=false) String next,
+						 @RequestParam(value="role",defaultValue="1") int role,
+						 @RequestParam(value="next",required=false) String next,
 						 @RequestParam(value="rememberme",defaultValue="false") boolean rememberme,
 						 HttpServletResponse response) {
 		
 		try {
-			Map<String,String> map = userServiceImpl.login(username, password);
+			Map<String,String> map = userServiceImpl.login(username, password,role);
 			//登陆成功，将ticket放到cookie中
 			if(map.containsKey("ticket")) {
 				Cookie cookie = new Cookie("ticket", map.get("ticket"));
@@ -90,8 +102,19 @@ public class LoginController {
 				if(!StringUtils.isBlank(next)) {
 					return "redirect:"+next;
 				}
-				//登陆成功直接重定向到主页
-				return "redirect:/";
+				
+				
+				if(role==1) {
+					//跳转到用户首页
+					return "redirect:/usermain";
+					
+				}else if(role==2){
+					//重定向到医生首页
+					return "docterMain";
+				}else {
+					//登陆成功直接重定向到主页
+					return "redirect:/";
+				}		
 			}else {
 				//登陆不成功--回到登陆页面，同时携带错误信息
 				model.addAttribute("msg", map.get("msg"));

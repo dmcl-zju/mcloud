@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	
+	医生姓名：$!{user.name}
+	<br><br><br>
+
+	绑定的孕妇：<br><br>
+	#foreach($follower in $followers)
+		姓名: $!{follower.user.name}
+		头像：$!{follower.user.headUrl}
+		用户id(要隐藏的):$!{follower.user.id}<br>
+		<br><br>
+    #end
+	
+</body>
+</html>

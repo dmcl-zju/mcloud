@@ -8,11 +8,18 @@ public class Ticket {
 	private String ticket;
 	private Date expired;
 	private int status;
-	@Override
-	public String toString() {
-		return "Ticket [id=" + id + ", userId=" + userId + ", ticket=" + ticket + ", expired=" + expired + ", status="
-				+ status + "]";
+	private int role;
+	
+	
+	
+	
+	public int getRole() {
+		return role;
 	}
+	public void setRole(int role) {
+		this.role = role;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -42,6 +49,11 @@ public class Ticket {
 	}
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	@Override
+	public String toString() {
+		return "Ticket [id=" + id + ", userId=" + userId + ", ticket=" + ticket + ", expired=" + expired + ", status="
+				+ status + ", role=" + role + "]";
 	}
 	
 	

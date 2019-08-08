@@ -13,9 +13,7 @@ public class HostHolder {
 	private ThreadLocal<User> users = new ThreadLocal<>();
 	
 	public User get() {
-
 		return users.get();
-		
 	}
 	public void set(User user) {
 		users.set(user);

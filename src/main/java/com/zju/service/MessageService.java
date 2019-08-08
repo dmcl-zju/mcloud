@@ -10,9 +10,9 @@ public interface MessageService {
 	
 	public List<Message> getConversationDetail(String conversationId,int limit,int offset);
 	
-	public List<Message> getConversationList(int userId,int offset,int limit);
+	public List<Message> getConversationList(int userId,int userRole,int offset,int limit);
 	
-	public int getUnreadCount(int userId,String conversationId);
+	public int getUnreadCount(int userId, int userRole,String conversationId);
 	
-	public int clearUnreadCount(int userId,String conversationId);
+	public int clearUnreadCount(int userId,int userRole,String conversationId);
 }

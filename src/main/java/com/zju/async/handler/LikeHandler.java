@@ -31,7 +31,10 @@ public class LikeHandler implements EventHandler{
 		
 		Message message = new Message();
 		message.setFromId(WendaUtil.SYSTEM_USERID);
+		message.setFromRole(WendaUtil.SYSTEM_USERROLE);
 		message.setToId(model.getEntityOwnerId());
+		//这里点赞暂时定为只有用户能做，医生不能做
+		message.setToRole(1);
 		message.setContent("用户"+userServiceImpl.getUserById(model.getActorId()).getName()+"点赞了你的回答，http://127.0.0.1/question/"+model.getExts("questionId"));
 		message.setConversationId(WendaUtil.SYSTEM_USERID>model.getEntityOwnerId()?""+model.getEntityOwnerId()+WendaUtil.SYSTEM_USERID:""+WendaUtil.SYSTEM_USERID+model.getEntityOwnerId());
 		message.setCreatedDate(new Date());

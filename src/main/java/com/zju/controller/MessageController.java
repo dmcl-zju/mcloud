@@ -51,15 +51,29 @@ Logger logger = Logger.getLogger(CommentController.class);
 				return "redirect:/reglogin"; 
 			}
 			userId = hostHolder.get().getId();
-			List<Message> conversationList = messageServiceImpl.getConversationList(userId, 0, 10);
+			int userRole = hostHolder.get().getRole();
+			
+			List<Message> conversationList = messageServiceImpl.getConversationList(userId,userRole,0, 10);
 			List<ViewObject> conversations = new ArrayList<>();
 			for(Message message:conversationList) {
 				ViewObject vo = new ViewObject();
 				vo.set("conversation", message);
-				vo.set("unread", messageServiceImpl.getUnreadCount(userId, message.getConversationId()));
+				vo.set("unread", messageServiceImpl.getUnreadCount(userId,userRole, message.getConversationId()));
+				
+				int targetId = 0;
+				int targetRole = 0;
+				
 				//获取对方的id
-				int targetId = message.getFromId()==userId?message.getToId():message.getFromId();
-				vo.set("user", userServiceImpl.getUserById(targetId));
+				if(userId==message.getFromId() && userRole==message.getFromRole()) {
+					//说明发起者是本人，要找的是toId
+					targetId = message.getToId();
+					targetRole = message.getToRole();
+				}else {
+					//说明发起者是对方，要找的是toId
+					targetId = message.getFromId();
+					targetRole = message.getFromRole();
+				}
+				vo.set("user", userServiceImpl.getUserByIdAndRole(targetId, targetRole));
 				conversations.add(vo);
 			}
 		
@@ -84,7 +98,7 @@ Logger logger = Logger.getLogger(CommentController.class);
 			for(Message message:conversation) {
 				ViewObject vo = new ViewObject();
 				vo.set("message", message);
-				User user = userServiceImpl.getUserById(message.getFromId());
+				User user = userServiceImpl.getUserByIdAndRole(message.getFromId(), message.getFromRole());
 				//System.out.println(user+"-----"+message.getFromId()+"--"+message.getContent());
                if (user == null) {
                     continue;
@@ -95,7 +109,7 @@ Logger logger = Logger.getLogger(CommentController.class);
 			}
 			model.addAttribute("messages", messages);
 			//进入了详情页面后将未读数清零
-			messageServiceImpl.clearUnreadCount(hostHolder.get().getId(), conversationId);
+			messageServiceImpl.clearUnreadCount(hostHolder.get().getId(),hostHolder.get().getRole(), conversationId);
 		} catch (Exception e) {
 			logger.info("获取详情失败"+e.getMessage());
 		}
@@ -103,7 +117,7 @@ Logger logger = Logger.getLogger(CommentController.class);
 	}
 	
 	
-	
+/////////////////////////////////////////////原来的信息发送/////////////////////////////////////////////	
 	@RequestMapping(value = {"/msg/addMessage"}, method = {RequestMethod.POST})
 	@ResponseBody
 	public String addMessage(@RequestParam("toName") String toName,
@@ -136,4 +150,63 @@ Logger logger = Logger.getLogger(CommentController.class);
 			return WendaUtil.getJSONString(1,"插入失败");
 		}
 	}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+///////////////////////////////////////////////增加医生和孕妇的信息后进行更改/////////////////////////////////////////////////////////
+	
+	@RequestMapping(value = {"/msg/sendMessage"}, method = {RequestMethod.POST})
+	@ResponseBody
+	public String addMessage2(@RequestParam("toId") int toId,
+							  @RequestParam("toRole") int toRole,
+							  @RequestParam("content") String content) {
+		try {
+
+			if(hostHolder.get()==null) {
+				return WendaUtil.getJSONString(999, "用户未登陆");
+			}
+			
+			User user = userServiceImpl.getUserByIdAndRole(toId,toRole);
+			if(user == null) {
+				return WendaUtil.getJSONString(1, "用户不存在");
+			}
+			Message message = new Message();
+			int fromId = hostHolder.get().getId();
+			int fromRole = hostHolder.get().getRole();
+		
+			message.setToId(user.getId());
+			message.setToRole(user.getRole());
+			message.setFromId(fromId);
+			message.setFromRole(fromRole);
+			message.setContent(content);
+			message.setHasRead(0);
+			message.setCreatedDate(new Date());
+			//始终让小的放前面
+			String conversationId = "";
+			if(toId<fromId) {
+				conversationId = toId+"_"+toRole+"_"+fromId+"_"+fromRole;
+			}else {
+				conversationId = fromId+"_"+fromRole+"_"+toId+"_"+toRole;
+			}
+			message.setConversationId(conversationId);
+			messageServiceImpl.addMessage(message);
+			return WendaUtil.getJSONString(0);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.info("插入失败"+e.getMessage());
+			return WendaUtil.getJSONString(1,"插入失败");
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
