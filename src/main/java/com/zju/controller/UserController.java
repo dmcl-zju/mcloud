@@ -44,16 +44,7 @@ public class UserController {
 	@Resource
 	DataService dataServiceImpl;
 	
-	
-	
-	//孕妇获取自己的诊断报告列表
-	@RequestMapping(value="/haha")
-	public String getReport2(Model model) {
-		return "haha";
-	}
-	
-	
-	
+
 	//孕妇获取自己的诊断报告列表
 	@RequestMapping(value="/user/reports")
 	public String getReport(Model model) {
