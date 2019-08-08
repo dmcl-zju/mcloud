@@ -49,7 +49,10 @@ public class UserController {
 	//孕妇获取自己的诊断报告列表
 	@RequestMapping(value="/haha")
 	public String getReport2(Model model) {
+		
+		System.out.println("sdhfksdf");
 		return "haha";
+		
 	}
 	
 	
