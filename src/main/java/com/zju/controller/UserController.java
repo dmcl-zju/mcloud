@@ -159,9 +159,6 @@ public class UserController {
 							 @RequestParam("times") int times,
 							 @RequestParam("weeks") int weeks,
 							 @RequestParam("expectedDate") String expectedDate) {
-		
-		
-		//System.out.println("填写信息请求到来。。。");	
 		if(null==hostHolder.get()) {
 			//没有登录，跳转到登陆页面
             return"redirect:/reglogin";
@@ -179,13 +176,14 @@ public class UserController {
 			DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = format.parse(expectedDate);
 			Info.setExpectedDate(date);
-			//System.out.println(Info);
+			System.out.println(Info);
 			int res = userServiceImpl.setInfo(Info);
 			if(res>0) {
 				//System.out.println("更新成功");
 				//说明插入正常
 				//重定向到表单获取页面
-				return "redirect:/user/"+hostHolder.get().getId()+"/getInfo";
+				//System.out.println("redirect:/user/"+hostHolder.get().getId()+"/getInfo");
+				return "redirect:/user/getInfo";
 			}else {
 				//插入错误
 				model.addAttribute("msg", "插入错误");

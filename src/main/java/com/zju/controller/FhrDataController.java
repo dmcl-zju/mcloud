@@ -59,8 +59,6 @@ public class FhrDataController {
 			eventProducer.fireEvent(model);
 			
 			
-			
-			
 			return WendaUtil.getJSONString(0);
 		} catch (Exception e) {
 			// TODO: handle exception

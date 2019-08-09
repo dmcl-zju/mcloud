@@ -103,7 +103,6 @@ public class DocterController {
 	@RequestMapping(value="/docter/binders/{userId}/getInfo",produces="text/html;charset=UTF-8")
 	public String getInfo(Model model,@PathVariable("userId") int userId) {
 		try {
-			
 			User user = hostHolder.get();
 			
 			if(user==null) {

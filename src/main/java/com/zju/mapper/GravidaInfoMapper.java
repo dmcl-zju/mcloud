@@ -2,6 +2,7 @@ package com.zju.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.zju.model.GravidaInfo;
 import com.zju.model.User;
@@ -24,7 +25,7 @@ public interface GravidaInfoMapper {
 	
 	
 	//更新信息
-	@Insert({"update",TABLE_NAME," set name=#{name},age=#{age},weight=#{weight},height=#{height},pregnant_times=#{pregnantTimes},weeks=#{weeks},expected_date=#{expectedDate} where user_id=#{userId}"})
+	@Update({"update",TABLE_NAME," set name=#{name},age=#{age},weight=#{weight},height=#{height},pregnant_times=#{pregnantTimes},weeks=#{weeks},expected_date=#{expectedDate} where user_id=#{userId}"})
 	int updInfo(GravidaInfo gravidInfo);
 	
 	

@@ -7,9 +7,15 @@ public class User {
 	private String salt;
 	private String headUrl;
 	private int role;
+	private String phoneNum;
 	
 	
-
+	public String getPhoneNum() {
+		return phoneNum;
+	}
+	public void setPhoneNum(String phoneNum) {
+		this.phoneNum = phoneNum;
+	}
 	public int getRole() {
 		return role;
 	}
@@ -51,7 +57,8 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", password=" + password + ", salt=" + salt + ", headUrl="
-				+ headUrl + ", role=" + role + "]";
+				+ headUrl + ", role=" + role + ", phoneNum=" + phoneNum + "]";
 	}
+	
 	
 }

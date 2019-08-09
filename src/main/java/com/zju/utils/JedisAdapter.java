@@ -28,6 +28,61 @@ public class JedisAdapter implements InitializingBean{
 	}
 
 //-------------------------------------------封装一些常用的命令----------------------------------------------------------------------------
+	
+	
+	
+	
+	
+	
+	//添加有过期时间的字符串
+	public void setEX(String key,String value,int seconds) {
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			jedis.setex(key, seconds, value);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("redis异常："+e.getMessage());
+		}finally {
+			if(null!=jedis) {
+				jedis.close();
+			}
+		}
+	}
+	
+	//删除key值
+	public void del(String key) {
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			jedis.del(key);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("redis异常："+e.getMessage());
+		}finally {
+			if(null!=jedis) {
+				jedis.close();
+			}
+		}
+	}
+	
+	//是是否包含key
+	public boolean exists(String key) {
+		Jedis jedis = null;
+		try {
+			jedis = pool.getResource();
+			return jedis.exists(key);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("redis异常："+e.getMessage());
+			return false;
+		}finally {
+			if(null!=jedis) {
+				jedis.close();
+			}
+		}
+	}
+
 	//添加字符串
 	public void set(String key,String value) {
 		Jedis jedis = null;

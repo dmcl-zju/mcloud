@@ -46,7 +46,7 @@ public class GravidaInfoTest {
 		Info.setWeeks(16);
 		Info.setExpectedDate(new Date());
 		//插入一条数据
-		int res = gravidaInfoMapper.updInfo(Info);
+		int res = gravidaInfoMapper.insGravidaInfo(Info);
 		System.out.println(res);
 		
 		Info = gravidaInfoMapper.selGravidaInfo(12);

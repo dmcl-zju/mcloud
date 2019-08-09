@@ -1,7 +1,5 @@
 package com.zju.interceptor;
 
-import java.util.Date;
-
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -11,12 +9,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zju.mapper.DocterMapper;
 import com.zju.mapper.TicketMapper;
 import com.zju.mapper.UserMapper;
 import com.zju.model.HostHolder;
-import com.zju.model.Ticket;
 import com.zju.model.User;
+import com.zju.utils.JedisAdapter;
+import com.zju.utils.Rediskeyutil;
+import com.zju.utils.WendaUtil;
 
 @Component
 public class PassportInterceptor implements HandlerInterceptor {
@@ -30,6 +31,9 @@ public class PassportInterceptor implements HandlerInterceptor {
 	
 	@Resource
 	DocterMapper docterMapper;
+	
+	@Resource
+	JedisAdapter jedisAdapter;
 	
 	@Resource
 	HostHolder hostHolder;
@@ -49,23 +53,37 @@ public class PassportInterceptor implements HandlerInterceptor {
 		}
 		
 		if(null != ticket) {
-			Ticket loginTicket = ticketMapper.selByticket(ticket);
-			if(loginTicket==null || loginTicket.getStatus()!=0 || loginTicket.getExpired().before(new Date())) {
-				//System.out.println("非登陆用户"+loginTicket);
-				return true;
+			String ticketKey = Rediskeyutil.getTicketKey(ticket);
+			
+			//检验是否已经登录
+			if(jedisAdapter.exists(ticketKey)) {
+				String userJson = jedisAdapter.get(ticketKey);
+				
+				User user = JSONObject.parseObject(userJson, User.class);
+				
+				if(null!=user) {
+					hostHolder.set(user);
+				}
 			}
-			//到这里说明是登陆用户，先判断是医生还是孕妇
-			if(loginTicket.getRole()==1) {
-				//孕妇
-				User user = userMapper.selById(loginTicket.getUserId());
-				hostHolder.set(user);
-				//System.out.println("孕妇用户"+user.getName()+"登陆进来了");
-			}else if(loginTicket.getRole()==2) {
-				//医生
-				User user = docterMapper.selById(loginTicket.getUserId());
-				hostHolder.set(user);
-				//System.out.println("医生用户"+user.getName()+"登陆进来了");
-			}
+/////////////////////////////////基于数据库的写法////////////////////////
+//			Ticket loginTicket = ticketMapper.selByticket(ticket);
+//			if(loginTicket==null || loginTicket.getStatus()!=0 || loginTicket.getExpired().before(new Date())) {
+//				//System.out.println("非登陆用户"+loginTicket);
+//				return true;
+//			}
+//			//到这里说明是登陆用户，先判断是医生还是孕妇
+//			if(loginTicket.getRole()==1) {
+//				//孕妇
+//				User user = userMapper.selById(loginTicket.getUserId());
+//				hostHolder.set(user);
+//				//System.out.println("孕妇用户"+user.getName()+"登陆进来了");
+//			}else if(loginTicket.getRole()==2) {
+//				//医生
+//				User user = docterMapper.selById(loginTicket.getUserId());
+//				hostHolder.set(user);
+//				//System.out.println("医生用户"+user.getName()+"登陆进来了");
+//			}
+////////////////////////////////////////////////////////////////////////////////
 		}
 		return true;
 	}

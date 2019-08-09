@@ -11,7 +11,13 @@ public class Rediskeyutil {
 	private static String FOLLOWERKEY="FOLLOWERKEY";
 	private static String FOLLOWEEKEY="FOLLOWEEKEY";
 	private static String TIMELINEKEY="TIMELINEKEY";
+	private static String TICKET = "TICKET";
 	
+	
+	
+	public static String getTicketKey(String ticket) {
+		return TICKET+SPLIT+ticket;
+	}
 
 	public static String getLikeKey(int entityType,int entityId) {
 		return LIKE+SPLIT+String.valueOf(entityType)+SPLIT+String.valueOf(entityId);

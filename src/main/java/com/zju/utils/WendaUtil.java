@@ -67,7 +67,7 @@ public class WendaUtil {
 	}
 	
 	
-	//加入map
+	//加入list
 	public static String getJSONString(int code,String listname,List<User> list) {
 		JSONObject json = new JSONObject();
 		json.put("code", code);
@@ -75,6 +75,15 @@ public class WendaUtil {
 		return json.toJSONString();
 	}
 	
+	//获取随机验证码
+	 public static String getRandom(int count) {
+        String num = "";
+        for (int i = 0; i < count; i++) {
+            num = num + String.valueOf((int) Math.floor(Math.random() * 9 + 1));
+        }
+        return num;
+	}
+
 	
 	//MD5加密
 	 public static String MD5(String key) {

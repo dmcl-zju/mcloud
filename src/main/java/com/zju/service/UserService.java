@@ -15,11 +15,20 @@ public interface UserService {
 	//通过用户名查找
 	public User getUserByName(String name);
 	
-	//用户注册
-	public Map<String,String> regist(String username,String password,int role);
+	//通过手机号查找
+	public User getUserByPhoneNum(String phoneNum);
 	
-	//用户登录
-	public Map<String,String> login(String username,String password,int role);
+	//通过手机号查找
+	public User getDocterByPhoneNum(String phoneNum);
+	
+	//用户注册
+	public Map<String,String> regist(String username,String password,int role,String phoneNum,String code);
+	
+	//用户登录---密码
+	public Map<String,String> loginByPassWord(String username,String password,int role);
+	
+	//用户登录--手机验证码
+	public Map<String,String> loginByCode(String phoneNum,String code,int role);
 	
 	//用户退出登录
 	public Map<String,String> logout(String ticket);
@@ -27,7 +36,7 @@ public interface UserService {
 	//获取所有的医生用户
 	public List<Map<String,Object>> getAllDocter();
 	
-	//获取所有的医生用户
+	//获单个医生用户
     public User getDocterById(int id);
     
     //获取所有的医生背景资料
