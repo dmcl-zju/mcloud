@@ -41,17 +41,17 @@ public class PhoneServiceImpl implements PhoneService{
 	JedisAdapter jedisAdapter; 
 	
 	
-    //²úÆ·Ãû³Æ:ÔÆÍ¨ĞÅ¶ÌĞÅAPI²úÆ·,¿ª·¢ÕßÎŞĞèÌæ»»
+    //äº§å“åç§°:äº‘é€šä¿¡çŸ­ä¿¡APIäº§å“,å¼€å‘è€…æ— éœ€æ›¿æ¢
     static final String product = "Dysmsapi";
-    //²úÆ·ÓòÃû,¿ª·¢ÕßÎŞĞèÌæ»»
+    //äº§å“åŸŸå,å¼€å‘è€…æ— éœ€æ›¿æ¢
     static final String domain = "dysmsapi.aliyuncs.com";
-    //ÕËºÅºÍÃÜÂë
-    private String accessKeyId="LTAIfu9gkzFYNTqK";
-    private String accessKeySecret="0q3MfmUIQE303jS4BLR3DmslIVeGr4";
+    //è´¦å·å’Œå¯†ç 
+    private String accessKeyId="";
+    private String accessKeySecret="";
    
     
     /**
-     * ·¢ËÍ¶ÌĞÅ·şÎñ
+     * å‘é€çŸ­ä¿¡æœåŠ¡
      *
      * @param mobile
      * @return
@@ -59,24 +59,24 @@ public class PhoneServiceImpl implements PhoneService{
     @Override
     public Map<String,String> sendMessage(String mobile) {
         Map<String,String> res = new HashMap<>();
-        //Ä£°å
-        String signName = "ĞÄÔÆ";
+        //æ¨¡æ¿
+        String signName = "å¿ƒäº‘";
         String templeteCode = "SMS_172205565";
-        //»ñÈ¡Ëæ»úÑéÖ¤Âë£¬²¢×ª»»³Éjson´®µÄĞÎÊ½
+        //è·å–éšæœºéªŒè¯ç ï¼Œå¹¶è½¬æ¢æˆjsonä¸²çš„å½¢å¼
         String identifyCode = WendaUtil.getRandom(4);
         Map<String, String> codeMap = new HashMap<>();
         codeMap.put("code", identifyCode);
-        //¿ªÊ¼·¢ËÍ
+        //å¼€å§‹å‘é€
         SendSmsResponse response;
         try {
-        	//ÏÈ´æÈëredisÖĞ,ÏÈÉèÖÃ5·ÖÖÓµÄÓĞĞ§Ê±¼ä
+        	//å…ˆå­˜å…¥redisä¸­,å…ˆè®¾ç½®5åˆ†é’Ÿçš„æœ‰æ•ˆæ—¶é—´
         	jedisAdapter.setEX(mobile, identifyCode, 300);
-        	//È»ºó·¢¶ÌĞÅ
+        	//ç„¶åå‘çŸ­ä¿¡
             response = sendSms(mobile, signName, templeteCode, JSON.toJSONString(codeMap), null);
-            //¶ÌĞÅ·¢ËÍ³É¹¦ºó´æÈëredis
+            //çŸ­ä¿¡å‘é€æˆåŠŸåå­˜å…¥redis
            
             if (response != null && response.getCode().equals("OK")) {
-                //System.out.println("·¢ËÍ³É¹¦"+response.getCode()+"---"+response.getMessage());
+                //System.out.println("å‘é€æˆåŠŸ"+response.getCode()+"---"+response.getMessage());
                 res.put("code","0");
             }else {
             	 if(jedisAdapter.exists(mobile)) {
@@ -88,7 +88,7 @@ public class PhoneServiceImpl implements PhoneService{
         } catch (Exception e) {
             logger.error("sendMessage method invoke error:"+e.getMessage());
             res.put("code","1");
-            //Èç¹û·¢ËÍÊ§°Ü»òÕß·ÅÈëredisÊ§°Ü£¬È¡³öredisµÄkey
+            //å¦‚æœå‘é€å¤±è´¥æˆ–è€…æ”¾å…¥rediså¤±è´¥ï¼Œå–å‡ºredisçš„key
             if(jedisAdapter.exists(mobile)) {
             	jedisAdapter.del(mobile);
             }
@@ -104,66 +104,66 @@ public class PhoneServiceImpl implements PhoneService{
 			String outId) throws ClientException {
 		// TODO Auto-generated method stub
 		
-		 //¿É×ÔÖúµ÷Õû³¬Ê±Ê±¼ä
+		 //å¯è‡ªåŠ©è°ƒæ•´è¶…æ—¶æ—¶é—´
 //        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
 //        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
  
-        //³õÊ¼»¯acsClient,Ôİ²»Ö§³Öregion»¯
+        //åˆå§‹åŒ–acsClient,æš‚ä¸æ”¯æŒregionåŒ–
         IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
         DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
         IAcsClient acsClient = new DefaultAcsClient(profile);
  
-        //×é×°ÇëÇó¶ÔÏó-¾ßÌåÃèÊö¼û¿ØÖÆÌ¨-ÎÄµµ²¿·ÖÄÚÈİ
+        //ç»„è£…è¯·æ±‚å¯¹è±¡-å…·ä½“æè¿°è§æ§åˆ¶å°-æ–‡æ¡£éƒ¨åˆ†å†…å®¹
         SendSmsRequest request = new SendSmsRequest();
-        //±ØÌî:´ı·¢ËÍÊÖ»úºÅ
+        //å¿…å¡«:å¾…å‘é€æ‰‹æœºå·
         request.setPhoneNumbers(phoneNums);
-        //±ØÌî:¶ÌĞÅÇ©Ãû-¿ÉÔÚ¶ÌĞÅ¿ØÖÆÌ¨ÖĞÕÒµ½
-        request.setSignName(signName);//ÖÚÆÀÖÚ²â
-        //±ØÌî:¶ÌĞÅÄ£°å-¿ÉÔÚ¶ÌĞÅ¿ØÖÆÌ¨ÖĞÕÒµ½
+        //å¿…å¡«:çŸ­ä¿¡ç­¾å-å¯åœ¨çŸ­ä¿¡æ§åˆ¶å°ä¸­æ‰¾åˆ°
+        request.setSignName(signName);//ä¼—è¯„ä¼—æµ‹
+        //å¿…å¡«:çŸ­ä¿¡æ¨¡æ¿-å¯åœ¨çŸ­ä¿¡æ§åˆ¶å°ä¸­æ‰¾åˆ°
         request.setTemplateCode(templeteCode);
-        //¿ÉÑ¡:Ä£°åÖĞµÄ±äÁ¿Ìæ»»JSON´®,ÈçÄ£°åÄÚÈİÎª"Ç×°®µÄ${name},ÄúµÄÑéÖ¤ÂëÎª${code}"Ê±,´Ë´¦µÄÖµÎª
+        //å¯é€‰:æ¨¡æ¿ä¸­çš„å˜é‡æ›¿æ¢JSONä¸²,å¦‚æ¨¡æ¿å†…å®¹ä¸º"äº²çˆ±çš„${name},æ‚¨çš„éªŒè¯ç ä¸º${code}"æ—¶,æ­¤å¤„çš„å€¼ä¸º
         request.setTemplateParam(templateParam);//{"code":"152745"}
  
-        //Ñ¡Ìî-ÉÏĞĞ¶ÌĞÅÀ©Õ¹Âë(ÎŞÌØÊâĞèÇóÓÃ»§ÇëºöÂÔ´Ë×Ö¶Î)
+        //é€‰å¡«-ä¸Šè¡ŒçŸ­ä¿¡æ‰©å±•ç (æ— ç‰¹æ®Šéœ€æ±‚ç”¨æˆ·è¯·å¿½ç•¥æ­¤å­—æ®µ)
         //request.setSmsUpExtendCode("90997");
  
-        //¿ÉÑ¡:outIdÎªÌá¹©¸øÒµÎñ·½À©Õ¹×Ö¶Î,×îÖÕÔÚ¶ÌĞÅ»ØÖ´ÏûÏ¢ÖĞ½«´ËÖµ´ø»Ø¸øµ÷ÓÃÕß
+        //å¯é€‰:outIdä¸ºæä¾›ç»™ä¸šåŠ¡æ–¹æ‰©å±•å­—æ®µ,æœ€ç»ˆåœ¨çŸ­ä¿¡å›æ‰§æ¶ˆæ¯ä¸­å°†æ­¤å€¼å¸¦å›ç»™è°ƒç”¨è€…
         request.setOutId(outId);//zpzc
  
-        //hint ´Ë´¦¿ÉÄÜ»áÅ×³öÒì³££¬×¢Òâcatch
+        //hint æ­¤å¤„å¯èƒ½ä¼šæŠ›å‡ºå¼‚å¸¸ï¼Œæ³¨æ„catch
  
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
         acsClient.getAcsResponse(request);
         return sendSmsResponse;
 	}
 
-	//Õâ¸öÊÇ²éÑ¯µÄ·şÎñ£¬ÔİÊ±Ã»ÓĞÓÃµ½
+	//è¿™ä¸ªæ˜¯æŸ¥è¯¢çš„æœåŠ¡ï¼Œæš‚æ—¶æ²¡æœ‰ç”¨åˆ°
 	@Override
 	public QuerySendDetailsResponse querySendDetails(String phoneNumber, String bizId) throws ClientException {
-		 //¿É×ÔÖúµ÷Õû³¬Ê±Ê±¼ä
+		 //å¯è‡ªåŠ©è°ƒæ•´è¶…æ—¶æ—¶é—´
 //        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
 //        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
  
-        //³õÊ¼»¯acsClient,Ôİ²»Ö§³Öregion»¯
+        //åˆå§‹åŒ–acsClient,æš‚ä¸æ”¯æŒregionåŒ–
         IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
         DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
         IAcsClient acsClient = new DefaultAcsClient(profile);
  
-        //×é×°ÇëÇó¶ÔÏó
+        //ç»„è£…è¯·æ±‚å¯¹è±¡
         QuerySendDetailsRequest request = new QuerySendDetailsRequest();
-        //±ØÌî-ºÅÂë
+        //å¿…å¡«-å·ç 
         request.setPhoneNumber(phoneNumber);
-        //¿ÉÑ¡-Á÷Ë®ºÅ
+        //å¯é€‰-æµæ°´å·
         request.setBizId(bizId);
-        //±ØÌî-·¢ËÍÈÕÆÚ Ö§³Ö30ÌìÄÚ¼ÇÂ¼²éÑ¯£¬¸ñÊ½yyyyMMdd
+        //å¿…å¡«-å‘é€æ—¥æœŸ æ”¯æŒ30å¤©å†…è®°å½•æŸ¥è¯¢ï¼Œæ ¼å¼yyyyMMdd
         SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd");
         request.setSendDate(ft.format(new Date()));
-        //±ØÌî-Ò³´óĞ¡
+        //å¿…å¡«-é¡µå¤§å°
         request.setPageSize(10L);
-        //±ØÌî-µ±Ç°Ò³Âë´Ó1¿ªÊ¼¼ÆÊı
+        //å¿…å¡«-å½“å‰é¡µç ä»1å¼€å§‹è®¡æ•°
         request.setCurrentPage(1L);
  
-        //hint ´Ë´¦¿ÉÄÜ»áÅ×³öÒì³££¬×¢Òâcatch
+        //hint æ­¤å¤„å¯èƒ½ä¼šæŠ›å‡ºå¼‚å¸¸ï¼Œæ³¨æ„catch
         QuerySendDetailsResponse querySendDetailsResponse = acsClient.getAcsResponse(request);
         return querySendDetailsResponse;
 
